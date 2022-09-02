@@ -1,4 +1,5 @@
 .DS_Store
+.vscode
 .cproject
 .project
 .settings
