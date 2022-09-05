@@ -56,7 +56,8 @@ struct Max {
 class Joy {
   typedef sensor_msgs::Joy::_buttons_type ButtonType;
 
- private:
+ //private:
+ public:
   ros::NodeHandle nh_;
   ros::Publisher ctrl_pub_;
   ros::Subscriber joy_sub_;

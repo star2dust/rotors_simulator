@@ -24,8 +24,8 @@
 #include <mav_msgs/default_topics.h>
 
 Joy::Joy() {
-  ros::NodeHandle nh;
-  ros::NodeHandle pnh("~");
+  ros::NodeHandle nh; // 全局命名空间
+  ros::NodeHandle pnh("~"); // 局部命名空间（发布话题自带节点名）
   ctrl_pub_ = nh_.advertise<mav_msgs::RollPitchYawrateThrust> (
     mav_msgs::default_topics::COMMAND_ROLL_PITCH_YAWRATE_THRUST, 10);
 
@@ -37,14 +37,20 @@ Joy::Joy() {
   control_msg_.thrust.z = 0;
   current_yaw_vel_ = 0;
 
+  // 设置无人机类型
+  pnh.param("is_fixed_wing", is_fixed_wing_, false);
+
+  // 设置摇杆键位
   pnh.param("axis_roll_", axes_.roll, 0);
   pnh.param("axis_pitch_", axes_.pitch, 1);
   pnh.param("axis_thrust_", axes_.thrust, 2);
 
+  // 设置摇杆反转
   pnh.param("axis_direction_roll", axes_.roll_direction, -1);
   pnh.param("axis_direction_pitch", axes_.pitch_direction, 1);
   pnh.param("axis_direction_thrust", axes_.thrust_direction, 1);
 
+  // 设置摇杆最大值
   pnh.param("max_v_xy", max_.v_xy, 1.0);  // [m/s]
   pnh.param("max_roll", max_.roll, 10.0 * M_PI / 180.0);  // [rad]
   pnh.param("max_pitch", max_.pitch, 10.0 * M_PI / 180.0);  // [rad]
@@ -53,8 +59,7 @@ Joy::Joy() {
 
   pnh.param("v_yaw_step", v_yaw_step_, 0.05);  // [rad/s]
 
-  pnh.param("is_fixed_wing", is_fixed_wing_, false);
-
+  // 设置按键键位
   pnh.param("button_yaw_left_", buttons_.yaw_left, 3);
   pnh.param("button_yaw_right_", buttons_.yaw_right, 4);
   pnh.param("button_ctrl_enable_", buttons_.ctrl_enable, 5);
@@ -75,6 +80,7 @@ void Joy::StopMav() {
   control_msg_.thrust.z = 0;
 }
 
+// 接收ROS自带joy话题后的callback
 void Joy::JoyCallback(const sensor_msgs::JoyConstPtr& msg) {
   current_joy_ = *msg;
   control_msg_.roll = msg->axes[axes_.roll] * max_.roll * axes_.roll_direction;
@@ -112,6 +118,10 @@ void Joy::Publish() {
 int main(int argc, char** argv) {
   ros::init(argc, argv, "rotors_joy_interface");
   Joy joy;
+
+
+  ROS_INFO("Test axes: [%d, %d, %d].",
+           joy.axes_.roll , joy.axes_.pitch, joy.axes_.thrust);
 
   ros::spin();
 
