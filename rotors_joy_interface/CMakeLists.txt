@@ -28,3 +28,13 @@ install(TARGETS rotors_joy_interface
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
+
+add_executable(rotors_joy_zup src/joy_zup.cpp)
+add_dependencies(rotors_joy_zup ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rotors_joy_zup ${catkin_LIBRARIES})
+
+install(TARGETS rotors_joy_zup
+  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
+  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)

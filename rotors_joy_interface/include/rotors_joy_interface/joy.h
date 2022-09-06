@@ -31,9 +31,11 @@ struct Axes {
   int roll;
   int pitch;
   int thrust;
+  int yaw_rate;
   int roll_direction;
   int pitch_direction;
   int thrust_direction;
+  int yaw_rate_direction;
 };
 
 struct Buttons {
@@ -49,7 +51,7 @@ struct Max {
   double v_xy;
   double roll;
   double pitch;
-  double rate_yaw;
+  double yaw_rate;
   double thrust;
 };
 
@@ -73,8 +75,7 @@ class Joy {
 
   Max max_;
 
-  double current_yaw_vel_;
-  double v_yaw_step_;
+  float deadzone_range;
 
   bool is_fixed_wing_;
 

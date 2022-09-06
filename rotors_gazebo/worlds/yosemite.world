@@ -61,9 +61,10 @@
       </attenuation>
       <direction>0.2 0.2 -0.9</direction>
     </light>
-    <include>
+    <!-- 地形模型 -->
+    <!-- <include>
       <uri>model://yosemite</uri>
-    </include>
+    </include> -->
     <model name="grass_takeoff_plane">
       <static>true</static>
       <link name='link'>

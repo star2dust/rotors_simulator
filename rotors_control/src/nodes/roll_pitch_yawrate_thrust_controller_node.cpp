@@ -102,7 +102,7 @@ void RollPitchYawrateThrustControllerNode::OdometryCallback(const nav_msgs::Odom
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "roll_pitch_yawrate_thrust_controller_node");
-
+  // 前面带了namespace，这里就需要::
   rotors_control::RollPitchYawrateThrustControllerNode roll_pitch_yawrate_thrust_controller_node;
 
   ros::spin();

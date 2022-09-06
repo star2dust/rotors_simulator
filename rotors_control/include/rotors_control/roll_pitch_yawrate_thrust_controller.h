@@ -20,6 +20,7 @@
 
 #ifndef ROTORS_CONTROL_ROLL_PITCH_YAWRATE_THRUST_CONTROLLER_H
 #define ROTORS_CONTROL_ROLL_PITCH_YAWRATE_THRUST_CONTROLLER_H
+// 这是一个纯C++库，学到了，非ROS节点可以作为库加到CMakeList里
 
 #include <mav_msgs/conversions.h>
 #include <mav_msgs/eigen_mav_msgs.h>
@@ -48,15 +49,17 @@ class RollPitchYawrateThrustControllerParameters {
   RotorConfiguration rotor_configuration_;
 };
 
+// 电机的控制分配
 class RollPitchYawrateThrustController {
  public:
   RollPitchYawrateThrustController();
   ~RollPitchYawrateThrustController();
   void InitializeParameters();
-  void CalculateRotorVelocities(Eigen::VectorXd* rotor_velocities) const;
-
+  // 计算并赋值电机转速（返回void，从输入赋值）
+  void CalculateRotorVelocities(Eigen::VectorXd* rotor_velocities) const; //常成员函数, 它不改变对象的成员变量，也不能调用类中任何非const成员函数。
+  // 下面两个set函数作用是msg_=msg，可以忽略
   void SetOdometry(const EigenOdometry& odometry);
-  void SetRollPitchYawrateThrust(
+  void SetRollPitchYawrateThrust(//附带解锁电机命令
       const mav_msgs::EigenRollPitchYawrateThrust& roll_pitch_yawrate_thrust);
 
   RollPitchYawrateThrustControllerParameters controller_parameters_;
@@ -65,7 +68,7 @@ class RollPitchYawrateThrustController {
   EIGEN_MAKE_ALIGNED_OPERATOR_NEW
  private:
   bool initialized_params_;
-  bool controller_active_;
+  bool controller_active_; //解锁电机
 
   Eigen::Vector3d normalized_attitude_gain_;
   Eigen::Vector3d normalized_angular_rate_gain_;
@@ -73,7 +76,7 @@ class RollPitchYawrateThrustController {
 
   mav_msgs::EigenRollPitchYawrateThrust roll_pitch_yawrate_thrust_;
   EigenOdometry odometry_;
-
+  // 计算并赋值角加速度
   void ComputeDesiredAngularAcc(Eigen::Vector3d* angular_acceleration) const;
 };
 }

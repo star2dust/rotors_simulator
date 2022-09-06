@@ -49,7 +49,7 @@ Joy::Joy() {
   // 设置摇杆反转
   pnh.param("axis_direction_roll", axes_.roll_direction, -1);
   pnh.param("axis_direction_pitch", axes_.pitch_direction, 1);
-  pnh.param("axis_direction_yaw_rate", axes_.yaw_rate_direction, -1);
+  pnh.param("axis_direction_yaw_rate", axes_.yaw_rate_direction, 1);
   pnh.param("axis_direction_thrust", axes_.thrust_direction, 1);
 
   // 设置摇杆最大值
@@ -102,12 +102,12 @@ void Joy::JoyCallback(const sensor_msgs::JoyConstPtr& msg) {
   control_msg_.roll = deadzone(msg->axes[axes_.roll],deadzone_range) * max_.roll * axes_.roll_direction;
   control_msg_.pitch = deadzone(msg->axes[axes_.pitch],deadzone_range) * max_.pitch * axes_.pitch_direction;
   
-  // 偏航控制信号（向右转为正，即z轴向下）
+  // 偏航控制信号（向左转为正，即z轴向上）
   if (msg->buttons[buttons_.yaw_left]) {
-    control_msg_.yaw_rate  = -max_.yaw_rate;
+    control_msg_.yaw_rate  = max_.yaw_rate;
   }
   else if (msg->buttons[buttons_.yaw_right]) {
-    control_msg_.yaw_rate  = max_.yaw_rate;
+    control_msg_.yaw_rate  = -max_.yaw_rate;
   }
   else {
     control_msg_.yaw_rate = deadzone(msg->axes[axes_.yaw_rate],deadzone_range) * max_.yaw_rate * axes_.yaw_rate_direction;
