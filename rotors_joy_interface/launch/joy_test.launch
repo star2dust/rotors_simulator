@@ -1,4 +1,4 @@
 <launch>
     <node name="joy_node" pkg="joy" type="joy_node" />
-    <node name="rotors_joy_interface" pkg="rotors_joy_interface" type="rotors_joy_interface" output="screen"/>
+    <node name="rotors_joy_interface" pkg="rotors_joy_interface" type="rotors_joy_zup" output="screen"/>
 </launch>

@@ -19,11 +19,11 @@ catkin_package(
 
 add_definitions(-std=c++11)
 
-add_executable(rotors_joy_interface src/joy.cpp)
-add_dependencies(rotors_joy_interface ${catkin_EXPORTED_TARGETS})
-target_link_libraries(rotors_joy_interface ${catkin_LIBRARIES})
+add_executable(rotors_joy_zdown src/joy_zdown.cpp)
+add_dependencies(rotors_joy_zdown ${catkin_EXPORTED_TARGETS})
+target_link_libraries(rotors_joy_zdown ${catkin_LIBRARIES})
 
-install(TARGETS rotors_joy_interface
+install(TARGETS rotors_joy_zdown
   ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
   RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}

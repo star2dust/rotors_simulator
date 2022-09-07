@@ -62,9 +62,9 @@
       <direction>0.2 0.2 -0.9</direction>
     </light>
     <!-- 地形模型 -->
-    <!-- <include>
+    <include>
       <uri>model://yosemite</uri>
-    </include> -->
+    </include>
     <model name="grass_takeoff_plane">
       <static>true</static>
       <link name='link'>
@@ -188,6 +188,23 @@
       </visual>
       <visual name='visual_7'>
         <pose>375 125 0 0 0 0</pose>
+        <cast_shadows>false</cast_shadows>
+        <geometry>
+          <plane>
+            <normal>0 0 1</normal>
+            <size>250 250</size>
+          </plane>
+        </geometry>
+        <material>
+          <script>
+            <uri>model://grass_plane/materials/scripts</uri>
+            <uri>model://grass_plane/materials/textures</uri>
+            <name>vrc/grass</name>
+          </script>
+        </material>
+      </visual>
+      <visual name='visual_8'>
+        <pose>375 -125 0 0 0 0</pose>
         <cast_shadows>false</cast_shadows>
         <geometry>
           <plane>

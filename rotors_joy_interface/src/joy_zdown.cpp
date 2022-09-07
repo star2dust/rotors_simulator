@@ -46,9 +46,9 @@ Joy::Joy() {
   pnh.param("axis_roll_", axes_.roll, 2);
   pnh.param("axis_pitch_", axes_.pitch, 3);
   
-  // 设置摇杆反转
+  // 设置摇杆反转（ROS自带joy话题摇杆左上是1）
   pnh.param("axis_direction_roll", axes_.roll_direction, -1);
-  pnh.param("axis_direction_pitch", axes_.pitch_direction, 1);
+  pnh.param("axis_direction_pitch", axes_.pitch_direction, -1);
   pnh.param("axis_direction_yaw_rate", axes_.yaw_rate_direction, -1);
   pnh.param("axis_direction_thrust", axes_.thrust_direction, 1);
 
@@ -119,7 +119,8 @@ void Joy::JoyCallback(const sensor_msgs::JoyConstPtr& msg) {
     control_msg_.thrust.x = (thrust >= 0.0) ? thrust : 0.0;
   }
   else {
-    control_msg_.thrust.z = (deadzone(msg->axes[axes_.thrust],deadzone_range) + 1) * max_.thrust / 2.0 * axes_.thrust_direction;
+    // 摇杆值为0时候是半油门，取负号因为升力沿z轴负向
+    control_msg_.thrust.z = -(deadzone(msg->axes[axes_.thrust],deadzone_range) + 1) * max_.thrust / 2.0 * axes_.thrust_direction;
   }
 
   ros::Time update_time = ros::Time::now();
