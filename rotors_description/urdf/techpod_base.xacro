@@ -16,10 +16,12 @@
 -->
 
 <robot name="techpod" xmlns:xacro="http://ros.org/wiki/xacro">
+  <!-- Include all macro definition -->
   <xacro:include filename="$(find rotors_description)/urdf/component_snippets.xacro" />
   <!-- Instantiate fixed wing "mechanics" -->
   <xacro:include filename="$(find rotors_description)/urdf/techpod.xacro" />
 
+  <!-- xacro:macroname to call a macro -->
   <!-- Mount an ADIS16448 IMU. -->
   <xacro:default_imu namespace="${namespace}" parent_link="${namespace}/base_link" />
 
