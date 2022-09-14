@@ -34,15 +34,18 @@
   <xacro:macro name="fixed_wing_base_macro"
     params="robot_namespace mass length width height color use_mesh_file 
       mesh_file aero_params_yaml vehicle_params_yaml is_input_joystick
-      *origin *inertia">
+      *origin *inertia"><!-- 前面带*表示输入参数是block-->
     <link name="${robot_namespace}/base_link"></link>
+    <!--base_link是root link相当于footprint，由此看出visual属性不是必须的-->
 
+    <!-- joint: base_link_inertia2base_link (偏移量由origin指定) -->
     <joint name="${robot_namespace}/base_joint" type="fixed">
       <xacro:insert_block name="origin" />
       <parent link="${robot_namespace}/base_link" />
       <child link="${robot_namespace}/base_link_inertia" />
     </joint>
 
+    <!-- base_link_inertia才是真正的base，inertia、visual、collision全加上 -->
     <link name="${robot_namespace}/base_link_inertia">
       <inertial>
         <mass value="${mass}" />

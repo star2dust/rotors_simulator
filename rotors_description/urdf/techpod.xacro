@@ -87,6 +87,7 @@
   <xacro:property name="propeller_mesh_file" value="package://rotors_description/meshes/propeller_${propeller_direction}.dae" />
 
   <!-- Inertia of the main body -->
+  <!-- 这里的property不是一个值而是一个block -->
   <xacro:property name="body_inertia">
     <inertia ixx="0.16632" ixy="0.0" ixz="0.0755" iyy="0.3899" iyz="0.0" izz="0.5243" />
   </xacro:property>
@@ -133,6 +134,7 @@
     vehicle_params_yaml="$(arg vehicle_params_yaml_file)"
     is_input_joystick="$(arg is_input_joystick)">
     <origin xyz="0 0 0" rpy="0 0 0" />
+    <!-- 将名为body_inertia的block插入此处 -->
     <xacro:insert_block name="body_inertia" />
   </xacro:fixed_wing_base_macro>
 
