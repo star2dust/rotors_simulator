@@ -81,10 +81,12 @@ void RollPitchYawrateThrustControllerNode::OdometryCallback(const nav_msgs::Odom
   ROS_INFO_ONCE("RollPitchYawrateThrustController got first odometry message.");
 
   EigenOdometry odometry;
+  // 将里程计消息用eigen向量表示
   eigenOdometryFromMsg(odometry_msg, &odometry);
   roll_pitch_yawrate_thrust_controller_.SetOdometry(odometry);
 
   Eigen::VectorXd ref_rotor_velocities;
+  // CalculateRotorVelocity需要用到里程计消息
   roll_pitch_yawrate_thrust_controller_.CalculateRotorVelocities(&ref_rotor_velocities);
 
   // Todo(ffurrer): Do this in the conversions header.
@@ -102,7 +104,7 @@ void RollPitchYawrateThrustControllerNode::OdometryCallback(const nav_msgs::Odom
 
 int main(int argc, char** argv) {
   ros::init(argc, argv, "roll_pitch_yawrate_thrust_controller_node");
-  // 前面带了namespace，这里就需要::
+  // 前面带了namespace，这里就需要rotors_control::
   rotors_control::RollPitchYawrateThrustControllerNode roll_pitch_yawrate_thrust_controller_node;
 
   ros::spin();

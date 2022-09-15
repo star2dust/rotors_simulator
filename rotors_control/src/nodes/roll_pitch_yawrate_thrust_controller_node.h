@@ -42,11 +42,13 @@ class RollPitchYawrateThrustControllerNode {
   RollPitchYawrateThrustControllerNode();
   ~RollPitchYawrateThrustControllerNode();
 
+  // 读ROS参数，初始化roll_pitch_yawrate_thrust_controller_
   void InitializeParams();
+  // 空函数未定义
   void Publish();
 
  private:
-
+  // RollPitchYawrateThrustControllerNode的功能大部分在控制库里
   RollPitchYawrateThrustController roll_pitch_yawrate_thrust_controller_;
 
   std::string namespace_;
@@ -54,12 +56,13 @@ class RollPitchYawrateThrustControllerNode {
   // subscribers
   ros::Subscriber cmd_roll_pitch_yawrate_thrust_sub_;
   ros::Subscriber odometry_sub_;
-
+  // publisher
   ros::Publisher motor_velocity_reference_pub_;
 
+  // 接收遥控消息转换为eigen传入roll_pitch_yawrate_thrust_controller_
   void RollPitchYawrateThrustCallback(
       const mav_msgs::RollPitchYawrateThrustConstPtr& roll_pitch_yawrate_thrust_reference_msg);
-
+  // 接收里程计消息转换为eigen传入roll_pitch_yawrate_thrust_controller_
   void OdometryCallback(const nav_msgs::OdometryConstPtr& odometry_msg);
 };
 }

@@ -44,7 +44,7 @@ void RollPitchYawrateThrustController::InitializeParameters() {
   I.setZero();
   I.block<3, 3>(0, 0) = vehicle_parameters_.inertia_;
   I(3, 3) = 1;
-  // 控制分配矩阵
+  // 初始化，计算控制分配矩阵
   angular_acc_to_rotor_velocities_.resize(vehicle_parameters_.rotor_configuration_.rotors.size(), 4);
   // Calculate the pseude-inverse A^{ \dagger} and then multiply by the inertia matrix I.
   // A^{ \dagger} = A^T*(A*A^T)^{-1}
@@ -67,13 +67,14 @@ void RollPitchYawrateThrustController::CalculateRotorVelocities(Eigen::VectorXd*
 
   // 角加速度计算
   Eigen::Vector3d angular_acceleration;
+  // 这里需要里程计消息
   ComputeDesiredAngularAcc(&angular_acceleration);
 
   Eigen::Vector4d angular_acceleration_thrust;
   angular_acceleration_thrust.block<3, 1>(0, 0) = angular_acceleration;
   angular_acceleration_thrust(3) = roll_pitch_yawrate_thrust_.thrust.z();
 
-  // 分配角加速度到电机转速
+  // 利用控制分配矩阵，分配角加速度到电机转速
   *rotor_velocities = angular_acc_to_rotor_velocities_ * angular_acceleration_thrust;
   *rotor_velocities = rotor_velocities->cwiseMax(Eigen::VectorXd::Zero(rotor_velocities->rows()));
   *rotor_velocities = rotor_velocities->cwiseSqrt();
@@ -94,7 +95,7 @@ void RollPitchYawrateThrustController::SetRollPitchYawrateThrust(
 void RollPitchYawrateThrustController::ComputeDesiredAngularAcc(Eigen::Vector3d* angular_acceleration) const {
   assert(angular_acceleration);
 
-  // 基于旋转矩阵控制
+  // 基于旋转矩阵控制（里程计信息）
   Eigen::Matrix3d R = odometry_.orientation.toRotationMatrix();
   double yaw = atan2(R(1, 0), R(0, 0));
 

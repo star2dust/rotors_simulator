@@ -57,8 +57,9 @@ class RollPitchYawrateThrustController {
   void InitializeParameters();
   // 计算并赋值电机转速（返回void，从输入赋值）
   void CalculateRotorVelocities(Eigen::VectorXd* rotor_velocities) const; //常成员函数, 它不改变对象的成员变量，也不能调用类中任何非const成员函数。
-  // 下面两个set函数作用是msg_=msg，可以忽略
+  // set函数作用是将普通msg转换为eigen传入controller
   void SetOdometry(const EigenOdometry& odometry);
+  // set函数作用是将普通msg转换为eigen传入controller
   void SetRollPitchYawrateThrust(//附带解锁电机命令
       const mav_msgs::EigenRollPitchYawrateThrust& roll_pitch_yawrate_thrust);
 
