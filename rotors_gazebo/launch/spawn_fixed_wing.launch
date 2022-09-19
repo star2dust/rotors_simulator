@@ -2,7 +2,7 @@
 
 <launch>
   <arg name="uav_name" default="techpod"/>
-  <!-- namespace在这设置 -->
+  <!-- namespace在这设置（xacro需要用到） -->
   <arg name="namespace" default="$(arg uav_name)"/>
   <arg name="aero_params_yaml_file" default="$(find rotors_gazebo)/resource/fixed_wing/aero_params_$(arg uav_name).yaml"/>
   <arg name="vehicle_params_yaml_file" default="$(find rotors_gazebo)/resource/fixed_wing/$(arg uav_name).yaml"/>
@@ -52,11 +52,4 @@
          -model $(arg namespace)"
    respawn="false" output="screen"><!--此处model就是个名字可自定义-->
   </node>
-  
-  <!-- rviz uses .urdf/.xacro as description and .rviz as view -->
-  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rotors_description)/rviz/techpod_model_view.rviz"/>
-  <!-- publish robot state for rviz -->
-  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
-  <!-- publish joint state for rviz -->
-  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
 </launch>

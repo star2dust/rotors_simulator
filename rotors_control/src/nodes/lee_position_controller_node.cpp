@@ -33,17 +33,21 @@ LeePositionControllerNode::LeePositionControllerNode(
    private_nh_(private_nh){
   InitializeParams();
 
+  // 订阅command/pose
   cmd_pose_sub_ = nh_.subscribe(
       mav_msgs::default_topics::COMMAND_POSE, 1,
       &LeePositionControllerNode::CommandPoseCallback, this);
 
+  // 订阅command/trajectory
   cmd_multi_dof_joint_trajectory_sub_ = nh_.subscribe(
       mav_msgs::default_topics::COMMAND_TRAJECTORY, 1,
       &LeePositionControllerNode::MultiDofJointTrajectoryCallback, this);
 
+  // 订阅odometry
   odometry_sub_ = nh_.subscribe(mav_msgs::default_topics::ODOMETRY, 1,
                                &LeePositionControllerNode::OdometryCallback, this);
 
+  // 发布command/motor_speed
   motor_velocity_reference_pub_ = nh_.advertise<mav_msgs::Actuators>(
       mav_msgs::default_topics::COMMAND_ACTUATORS, 1);
 

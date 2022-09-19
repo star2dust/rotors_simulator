@@ -38,9 +38,12 @@ int main(int argc, char** argv) {
 
   ros::V_string args;
   ros::removeROSArgs(argc, argv, args);
-
+  
+  // delay是延迟几秒起飞
   double delay;
 
+  // 虽然args.size()==6，实际用到的args最多5个，默认的第一个变量是程序名
+  // 即，args[0]=/home/chu/catkin_ws/devel/lib/rotors_gazebo/waypoint_publisher
   if (args.size() == 5) {
     delay = 1.0;
   } else if (args.size() == 6) {

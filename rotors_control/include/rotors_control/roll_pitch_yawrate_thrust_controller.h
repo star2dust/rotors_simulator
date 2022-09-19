@@ -73,6 +73,7 @@ class RollPitchYawrateThrustController {
 
   Eigen::Vector3d normalized_attitude_gain_;
   Eigen::Vector3d normalized_angular_rate_gain_;
+  // 控制分配矩阵
   Eigen::MatrixX4d angular_acc_to_rotor_velocities_;
 
   mav_msgs::EigenRollPitchYawrateThrust roll_pitch_yawrate_thrust_;

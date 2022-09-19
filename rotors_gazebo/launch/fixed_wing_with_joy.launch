@@ -21,6 +21,10 @@
     <arg name="verbose" value="$(arg verbose)"/>
   </include>
 
+  <!-- rviz uses .urdf/.xacro as description and .rviz as view -->
+  <!-- rviz需要robot description参数来显示urdf -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find rotors_description)/rviz/$(arg uav_name)_model_view.rviz"/>
+
   <group ns="$(arg uav_name)">
     <include file="$(find rotors_gazebo)/launch/spawn_fixed_wing.launch">
       <arg name="uav_name" value="$(arg uav_name)" />
@@ -39,5 +43,9 @@
       <!-- pitch方向和常规定义不一样 -->
       <param name="axis_direction_pitch" value="1" />
     </node>
+    <!-- publish robot state for rviz -->
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+    <!-- publish joint state for rviz -->
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" />
   </group>
 </launch>

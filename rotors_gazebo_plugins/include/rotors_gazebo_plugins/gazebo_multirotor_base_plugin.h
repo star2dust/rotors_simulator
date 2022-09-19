@@ -45,6 +45,7 @@ static const std::string kDefaultFrameId = "base_link";
 static const std::string kDefaultJointStatePubTopic = "joint_states";
 
 /// \brief This plugin publishes the motor speeds of your multirotor model.
+// GazeboMultirotorBasePlugin是一个model插件，所以继承自ModelPlugin
 class GazeboMultirotorBasePlugin : public ModelPlugin {
   typedef std::map<const unsigned int, const physics::JointPtr> MotorNumberToJointMap;
   typedef std::pair<const unsigned int, const physics::JointPtr> MotorNumberToJointPair;
@@ -60,6 +61,7 @@ class GazeboMultirotorBasePlugin : public ModelPlugin {
         node_handle_(NULL),
         pubs_and_subs_created_(false) {}
 
+  // 析构函数为空
   virtual ~GazeboMultirotorBasePlugin();
 
  protected:
@@ -97,7 +99,9 @@ class GazeboMultirotorBasePlugin : public ModelPlugin {
   MotorNumberToJointMap motor_joints_;
 
   std::string namespace_;
+  // topic: joint_states
   std::string joint_state_pub_topic_;
+  // topic: motor_speed
   std::string actuators_pub_topic_;
   std::string link_name_;
   std::string frame_id_;

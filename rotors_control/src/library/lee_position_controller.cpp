@@ -63,19 +63,24 @@ void LeePositionController::CalculateRotorVelocities(Eigen::VectorXd* rotor_velo
     return;
   }
 
+  // 加速度计算
   Eigen::Vector3d acceleration;
+  // 这是和roll_pitch_yawrate_thrust_controller的区别
   ComputeDesiredAcceleration(&acceleration);
 
+  // 角加速度计算
   Eigen::Vector3d angular_acceleration;
+  // 这里需要里程计消息
   ComputeDesiredAngularAcc(acceleration, &angular_acceleration);
 
-  // Project thrust onto body z axis.
+  // Project thrust onto body z axis.（与roll_pitch_yawrate_thrust_controller有区别）
   double thrust = -vehicle_parameters_.mass_ * acceleration.dot(odometry_.orientation.toRotationMatrix().col(2));
 
   Eigen::Vector4d angular_acceleration_thrust;
   angular_acceleration_thrust.block<3, 1>(0, 0) = angular_acceleration;
   angular_acceleration_thrust(3) = thrust;
 
+  // 利用控制分配矩阵，分配角加速度到电机转速
   *rotor_velocities = angular_acc_to_rotor_velocities_ * angular_acceleration_thrust;
   *rotor_velocities = rotor_velocities->cwiseMax(Eigen::VectorXd::Zero(rotor_velocities->rows()));
   *rotor_velocities = rotor_velocities->cwiseSqrt();

@@ -39,10 +39,11 @@ int main(int argc, char** argv) {
   ROS_INFO("Started hovering example.");
 
   std_srvs::Empty srv;
+  // 启动仿真
   bool unpaused = ros::service::call("/gazebo/unpause_physics", srv);
   unsigned int i = 0;
 
-  // Trying to unpause Gazebo for 10 seconds.
+  // Trying to unpause Gazebo for 10 seconds.（如果没启动成功）
   while (i <= 10 && !unpaused) {
     ROS_INFO("Wait for 1 second before trying to unpause Gazebo again.");
     std::this_thread::sleep_for(std::chrono::seconds(1));
@@ -50,6 +51,7 @@ int main(int argc, char** argv) {
     ++i;
   }
 
+  // 仿真无法启动的情况
   if (!unpaused) {
     ROS_FATAL("Could not wake up Gazebo.");
     return -1;
@@ -73,6 +75,7 @@ int main(int argc, char** argv) {
   nh_private.param("z", desired_position.z(), desired_position.z());
   nh_private.param("yaw", desired_yaw, desired_yaw);
 
+  // create trajectory from way point
   mav_msgs::msgMultiDofJointTrajectoryFromPositionYaw(
       desired_position, desired_yaw, &trajectory_msg);
 

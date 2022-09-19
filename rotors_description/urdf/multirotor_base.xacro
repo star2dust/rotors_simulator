@@ -78,6 +78,7 @@
     <gazebo>
       <plugin filename="librotors_gazebo_multirotor_base_plugin.so" name="multirotor_base_plugin">
         <robotNamespace>${robot_namespace}</robotNamespace>
+        <!-- 固定到哪一个link上 -->
         <linkName>${robot_namespace}/base_link</linkName>
         <rotorVelocitySlowdownSim>${rotor_velocity_slowdown_sim}</rotorVelocitySlowdownSim>
       </plugin>

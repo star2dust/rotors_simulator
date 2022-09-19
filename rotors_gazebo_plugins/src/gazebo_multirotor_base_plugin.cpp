@@ -43,6 +43,7 @@ void GazeboMultirotorBasePlugin::Load(physics::ModelPtr _model,
   world_ = model_->GetWorld();
   namespace_.clear();
 
+  // xacro中的接口
   getSdfParam<std::string>(_sdf, "robotNamespace", namespace_, namespace_,
                            true);
   getSdfParam<std::string>(_sdf, "linkName", link_name_, link_name_, true);
@@ -91,6 +92,7 @@ void GazeboMultirotorBasePlugin::OnUpdate(const common::UpdateInfo& _info) {
     gzdbg << __FUNCTION__ << "() called." << std::endl;
   }
 
+  // 订阅和发布节点只创建一次
   if (!pubs_and_subs_created_) {
     CreatePubsAndSubs();
     pubs_and_subs_created_ = true;
@@ -117,12 +119,16 @@ void GazeboMultirotorBasePlugin::OnUpdate(const common::UpdateInfo& _info) {
     double motor_rot_vel =
         m->second->GetVelocity(0) * rotor_velocity_slowdown_sim_;
 
+    // 往angular_velocities向量里加角速度
     actuators_msg_.add_angular_velocities(motor_rot_vel);
 
+    // 往name向量里加关节名称
     joint_state_msg_.add_name(m->second->GetName());
+    // 往position向量里加位置
     joint_state_msg_.add_position(m->second->Position(0));
   }
 
+  // 发布 /firefly/joint_states 和 /firefly/motor_speed 两个话题
   joint_state_pub_->Publish(joint_state_msg_);
   motor_pub_->Publish(actuators_msg_);
 }
@@ -138,8 +144,15 @@ void GazeboMultirotorBasePlugin::CreatePubsAndSubs() {
   // ============================================ //
   // =========== ACTUATORS MSG SETUP ============ //
   // ============================================ //
+
+  // 发布motor_speed话题
   motor_pub_ = node_handle_->Advertise<gz_sensor_msgs::Actuators>(
       "~/" + namespace_ + "/" + actuators_pub_topic_, 10);
+
+  // connect_gazebo_to_ros_topic_msg将ROS和gazebo的话题绑定在一起（插件用来读取数据）
+  // model_->GetName()是spawn_model时args输入的model名称（修改不影响程序）
+  // namespace是launch里arg输入的namespace
+  // rqt_graph中显示ros topic不显示gazebo topic
 
   // connect_gazebo_to_ros_topic_msg.set_gazebo_namespace(namespace_);
   connect_gazebo_to_ros_topic_msg.set_gazebo_topic("~/" + model_->GetName() +
@@ -154,6 +167,8 @@ void GazeboMultirotorBasePlugin::CreatePubsAndSubs() {
   // ============================================ //
   // ========== JOINT STATE MSG SETUP =========== //
   // ============================================ //
+
+  // 发布joint_states话题
   joint_state_pub_ = node_handle_->Advertise<gz_sensor_msgs::JointState>(
       "~/" + namespace_ + "/" + joint_state_pub_topic_, 1);
 

@@ -23,7 +23,7 @@
   <!-- Instantiate default firefly-->
   <xacro:include filename="$(find rotors_description)/urdf/firefly_base.xacro" />
 
-  <!-- Mount a generic pose sensor without pose map (working everywhere). -->
+  <!-- Mount a generic(通用的) pose sensor without pose map (working everywhere). -->
   <xacro:odometry_plugin_macro
     namespace="${namespace}"
     odometry_sensor_suffix="1"

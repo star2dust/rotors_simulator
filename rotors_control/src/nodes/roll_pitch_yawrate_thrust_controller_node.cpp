@@ -28,12 +28,18 @@ RollPitchYawrateThrustControllerNode::RollPitchYawrateThrustControllerNode() {
   InitializeParams();
 
   ros::NodeHandle nh;
+  
+  // kDefaultCommandRollPitchYawrateThrustTopic 即 mav_msgs::default_topics::COMMAND_ROLL_PITCH_YAWRATE_THRUST
+  // 我怀疑作者是嫌后者名字长了换个短的
 
+  // 订阅command/roll_pitch_yawrate_thrust
   cmd_roll_pitch_yawrate_thrust_sub_ = nh.subscribe(kDefaultCommandRollPitchYawrateThrustTopic, 1,
                                      &RollPitchYawrateThrustControllerNode::RollPitchYawrateThrustCallback, this);
+  // 订阅odometry
   odometry_sub_ = nh.subscribe(kDefaultOdometryTopic, 1,
                                &RollPitchYawrateThrustControllerNode::OdometryCallback, this);
 
+  // 发布command/motor_speed
   motor_velocity_reference_pub_ = nh.advertise<mav_msgs::Actuators>(
       kDefaultCommandMotorSpeedTopic, 1);
 }
