@@ -42,11 +42,13 @@
 #include "CommandMotorSpeed.pb.h"
 #include "WindSpeed.pb.h"
 
+/// @brief 定义旋转方向：逆时针1，顺时针-1
 namespace turning_direction {
 const static int CCW = 1;
 const static int CW = -1;
 } // namespace turning_direction
 
+/// @brief 定义电机类型：高速电机0、舵机1、力矩电机2
 enum class MotorType {
   kVelocity,
   kPosition,
@@ -69,6 +71,7 @@ static constexpr double kDefaulMaxRotVelocity = 838.0;
 static constexpr double kDefaultRotorDragCoefficient = 1.0e-4;
 static constexpr double kDefaultRollingMomentCoefficient = 1.0e-6;
 
+// GazeboMotorModel是一个model插件，所以继承自ModelPlugin，同时还继承自MotorModel
 class GazeboMotorModel : public MotorModel, public ModelPlugin {
 
  public:
@@ -106,8 +109,16 @@ class GazeboMotorModel : public MotorModel, public ModelPlugin {
   virtual void Publish();
 
  protected:
+  /// @brief Update forces and moments when the world is updated.
   virtual void UpdateForcesAndMoments();
+
+  /// \brief Load the plugin.
+  /// \param[in] _model Pointer to the model that loaded this plugin.
+  /// \param[in] _sdf SDF element that describes the plugin.
   virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf);
+
+  /// \brief Called when the world is updated.
+  /// \param[in] _info Update timing information.
   virtual void OnUpdate(const common::UpdateInfo & /*_info*/);
 
  private:
@@ -124,12 +135,17 @@ class GazeboMotorModel : public MotorModel, public ModelPlugin {
   /// \brief    Ensures any input angle is element of [0..2pi)
   double NormalizeAngle(double input);
 
+  // 默认为command/motor_speed，实际为gazebo/command/motor_speed
   std::string command_sub_topic_;
+  // 默认为wind_speed
   std::string wind_speed_sub_topic_;
   std::string joint_name_;
   std::string link_name_;
+  // 默认为motor_speed，实际为motor_speed/${motor_number}
   std::string motor_speed_pub_topic_;
+  // 默认为motor_position
   std::string motor_position_pub_topic_;
+  // 默认为motor_force
   std::string motor_force_pub_topic_;
   std::string namespace_;
 

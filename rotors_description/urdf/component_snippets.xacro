@@ -251,6 +251,7 @@
   <!-- Macro to add the controller interface. -->
   <xacro:macro name="controller_plugin_macro" params="namespace imu_sub_topic">
     <gazebo>
+      <!-- 将command/motor_speed转发成gazebo/command/motor_speed给gazebo -->
       <plugin name="controller_interface" filename="librotors_gazebo_controller_interface.so">
         <robotNamespace>${namespace}</robotNamespace>
         <commandAttitudeThrustSubTopic>command/attitude</commandAttitudeThrustSubTopic>
@@ -330,7 +331,7 @@
       <limit upper="0" lower="0" effort="0" velocity="0" />
     </joint>
     <gazebo>
-      <plugin filename="librotors_gazebo_imu_plugin.so" name="rotors_gazebo_imu${imu_suffix}_plugin">
+      <plugin name="rotors_gazebo_imu${imu_suffix}_plugin" filename="librotors_gazebo_imu_plugin.so">
       <!-- A good description of the IMU parameters can be found in the kalibr documentation:
            https://github.com/ethz-asl/kalibr/wiki/IMU-Noise-Model-and-Intrinsics -->
         <robotNamespace>${namespace}</robotNamespace> <!-- (string, required): ros namespace in which the messages are published -->
@@ -374,7 +375,7 @@
       <limit upper="0" lower="0" effort="0" velocity="0" />
     </joint>
     <gazebo>
-      <plugin filename="librotors_gazebo_odometry_plugin.so" name="odometry_sensor${odometry_sensor_suffix}">
+      <plugin name="odometry_sensor${odometry_sensor_suffix}" filename="librotors_gazebo_odometry_plugin.so">
         <linkName>${namespace}/odometry_sensor${odometry_sensor_suffix}_link</linkName>
         <robotNamespace>${namespace}</robotNamespace>
         <poseTopic>${pose_topic}</poseTopic>
@@ -467,7 +468,7 @@
             </vertical>
           </velocity_sensing>
         </gps>
-        <plugin filename="librotors_gazebo_gps_plugin.so" name="rotors_gazebo_gps${gps_suffix}_plugin">
+        <plugin name="rotors_gazebo_gps${gps_suffix}_plugin" filename="librotors_gazebo_gps_plugin.so">
           <robotNamespace>${namespace}</robotNamespace> <!-- (string, required): ros namespace in which the messages are published -->
           <linkName>${namespace}/gps${gps_suffix}_link</linkName> <!-- (string, required): name of the body which holds the GPS sensor -->
           <gpsTopic>${gps_topic}</gpsTopic> <!-- (string): name of the sensor output topic and prefix of service names (defaults to 'gps') -->
@@ -502,7 +503,7 @@
       <limit upper="0" lower="0" effort="0" velocity="0" />
     </joint>
     <gazebo>
-      <plugin filename="librotors_gazebo_magnetometer_plugin.so" name="rotors_gazebo_magnetometer${magnetometer_suffix}_plugin">
+      <plugin name="rotors_gazebo_magnetometer${magnetometer_suffix}_plugin" filename="librotors_gazebo_magnetometer_plugin.so">
         <robotNamespace>${namespace}</robotNamespace> <!-- (string, required): ros namespace in which the messages are published -->
         <linkName>${namespace}/magnetometer${magnetometer_suffix}_link</linkName> <!-- (string, required): name of the body which holds the magnetometer -->
         <magnetometerTopic>${magnetometer_topic}</magnetometerTopic> <!-- (string): name of the sensor output topic and prefix of service names (defaults to 'magnetic_field') -->
@@ -540,7 +541,7 @@
       <limit upper="0" lower="0" effort="0" velocity="0" />
     </joint>
     <gazebo>
-      <plugin filename="librotors_gazebo_pressure_plugin.so" name="rotors_gazebo_pressure_sensor${pressure_sensor_suffix}_plugin">
+      <plugin name="rotors_gazebo_pressure_sensor${pressure_sensor_suffix}_plugin" filename="librotors_gazebo_pressure_plugin.so">
         <robotNamespace>${namespace}</robotNamespace> <!-- (string, required): ros namespace in which the messages are published -->
         <linkName>${namespace}/pressure_sensor${pressure_sensor_suffix}_link</linkName> <!-- (string, required): name of the body which holds the pressure sensor -->
         <pressureTopic>${pressure_topic}</pressureTopic> <!-- (string): name of the sensor output topic and prefix of service names (defaults to 'air_pressure') -->
@@ -557,7 +558,7 @@
       wind_gust_force_mean wind_speed_mean use_custom_static_wind_field 
       custom_wind_field_path">
     <gazebo>
-      <plugin filename="librotors_gazebo_wind_plugin.so" name="wind_plugin">
+      <plugin name="wind_plugin" filename="librotors_gazebo_wind_plugin.so">
         <frameId>world</frameId>
         <linkName>${namespace}/base_link</linkName>
         <robotNamespace>${namespace}</robotNamespace>

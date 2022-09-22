@@ -8,7 +8,7 @@ Panels:
         - /Status1
         - /Axes1
         - /RobotModel1
-        - /RobotModel1/Status1
+        - /TF1/Frames1
       Splitter Ratio: 0.570588231086731
     Tree Height: 549
   - Class: rviz/Selection
@@ -60,7 +60,7 @@ Visualization Manager:
       Length: 0.10000000149011612
       Name: Axes
       Radius: 0.009999999776482582
-      Reference Frame: world
+      Reference Frame: firefly/base_link
       Show Trail: false
       Value: true
     - Alpha: 1
@@ -129,16 +129,84 @@ Visualization Manager:
           Show Trail: false
           Value: true
       Name: RobotModel
-      Robot Description: robot_description
+      Robot Description: firefly/robot_description
       TF Prefix: ""
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz/TF
+      Enabled: true
+      Frame Timeout: 15
+      Frames:
+        All Enabled: false
+        firefly/base_link:
+          Value: true
+        firefly/base_link_inertia:
+          Value: false
+        firefly/imu_link:
+          Value: false
+        firefly/imugt_link:
+          Value: false
+        firefly/odometry_sensor1:
+          Value: false
+        firefly/odometry_sensor1_link:
+          Value: false
+        firefly/odometry_sensorgt_link:
+          Value: false
+        firefly/rotor_0:
+          Value: true
+        firefly/rotor_1:
+          Value: true
+        firefly/rotor_2:
+          Value: true
+        firefly/rotor_3:
+          Value: true
+        firefly/rotor_4:
+          Value: true
+        firefly/rotor_5:
+          Value: true
+        world:
+          Value: true
+      Marker Alpha: 1
+      Marker Scale: 0.30000001192092896
+      Name: TF
+      Show Arrows: true
+      Show Axes: true
+      Show Names: true
+      Tree:
+        world:
+          firefly/base_link:
+            firefly/base_link_inertia:
+              {}
+            firefly/imu_link:
+              {}
+            firefly/imugt_link:
+              {}
+            firefly/odometry_sensor1_link:
+              {}
+            firefly/odometry_sensorgt_link:
+              {}
+            firefly/rotor_0:
+              {}
+            firefly/rotor_1:
+              {}
+            firefly/rotor_2:
+              {}
+            firefly/rotor_3:
+              {}
+            firefly/rotor_4:
+              {}
+            firefly/rotor_5:
+              {}
+          firefly/odometry_sensor1:
+            {}
+      Update Interval: 0
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
     Default Light: true
-    Fixed Frame: firefly/base_link_inertia
+    Fixed Frame: world
     Frame Rate: 30
   Name: root
   Tools:
@@ -162,7 +230,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 3.269913911819458
+      Distance: 3.308713674545288
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -178,9 +246,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.4903979003429413
+      Pitch: 1.0403990745544434
       Target Frame: <Fixed Frame>
-      Yaw: 0.7303978800773621
+      Yaw: 0.3153984844684601
     Saved: ~
 Window Geometry:
   Displays:
@@ -198,5 +266,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1200
-  X: 720
-  Y: 156
+  X: 540
+  Y: 175

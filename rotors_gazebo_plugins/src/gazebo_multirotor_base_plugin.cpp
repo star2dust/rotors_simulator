@@ -145,7 +145,7 @@ void GazeboMultirotorBasePlugin::CreatePubsAndSubs() {
   // =========== ACTUATORS MSG SETUP ============ //
   // ============================================ //
 
-  // 发布motor_speed话题
+  // gazebo发布motor_speed话题
   motor_pub_ = node_handle_->Advertise<gz_sensor_msgs::Actuators>(
       "~/" + namespace_ + "/" + actuators_pub_topic_, 10);
 
@@ -168,7 +168,7 @@ void GazeboMultirotorBasePlugin::CreatePubsAndSubs() {
   // ========== JOINT STATE MSG SETUP =========== //
   // ============================================ //
 
-  // 发布joint_states话题
+  // gazebo发布joint_states话题
   joint_state_pub_ = node_handle_->Advertise<gz_sensor_msgs::JointState>(
       "~/" + namespace_ + "/" + joint_state_pub_topic_, 1);
 

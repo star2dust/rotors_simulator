@@ -45,6 +45,8 @@ static const bool kPrintOnMsgCallback   = false;
 /// @}
 
 // Default values
+
+// 默认为空
 static const std::string kDefaultNamespace = "";
 static constexpr double kDefaultRotorVelocitySlowdownSim = 10.0;
 

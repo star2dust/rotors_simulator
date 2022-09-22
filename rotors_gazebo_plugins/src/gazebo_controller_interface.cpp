@@ -95,9 +95,10 @@ void GazeboControllerInterface::OnUpdate(const common::UpdateInfo& /*_info*/) {
   turning_velocities_msg.mutable_header()->mutable_stamp()->set_sec(now.sec);
   turning_velocities_msg.mutable_header()->mutable_stamp()->set_nsec(now.nsec);
 
-  // Frame ID is not used for this particular message
+  // Frame ID is not used for this particular message（gazebo转发话题不设置frame ID）
   turning_velocities_msg.mutable_header()->set_frame_id("");
 
+  // 发布转存的gazebo/command/motor_speed
   motor_velocity_reference_pub_->Publish(turning_velocities_msg);
 }
 
@@ -118,20 +119,18 @@ void GazeboControllerInterface::CreatePubsAndSubs() {
   // === ACTUATORS (MOTOR VELOCITY) MSG SETUP (GAZEBO -> ROS) === //
   // ============================================================ //
 
-  // TODO This topic is missing the "~" and is in a completely different
-  // namespace, fix?
-
   gzdbg << "GazeboControllerInterface creating Gazebo publisher on \""
         << namespace_ + "/" + motor_velocity_reference_pub_topic_ << "\"."
         << std::endl;
+  // 将command/motor_speed转发为gazebo/command/motor_speed
   motor_velocity_reference_pub_ =
       node_handle_->Advertise<gz_sensor_msgs::Actuators>(
-          namespace_ + "/" + motor_velocity_reference_pub_topic_, 1);
+          "~" + namespace_ + "/" + motor_velocity_reference_pub_topic_, 1);
 
   // Connect to ROS
   gz_std_msgs::ConnectGazeboToRosTopic connect_gazebo_to_ros_topic_msg;
   connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
-      namespace_ + "/" + motor_velocity_reference_pub_topic_);
+      "~" + namespace_ + "/" + motor_velocity_reference_pub_topic_);
   connect_gazebo_to_ros_topic_msg.set_ros_topic(
       namespace_ + "/" + motor_velocity_reference_pub_topic_);
   connect_gazebo_to_ros_topic_msg.set_msgtype(
@@ -145,6 +144,7 @@ void GazeboControllerInterface::CreatePubsAndSubs() {
   gzdbg << "Subscribing to Gazebo topic \""
         << "~/" + namespace_ + "/" + command_motor_speed_sub_topic_ << "\"."
         << std::endl;
+  // 接收控制器发出的command/motor_speed
   cmd_motor_sub_ = node_handle_->Subscribe(
       "~/" + namespace_ + "/" + command_motor_speed_sub_topic_,
       &GazeboControllerInterface::CommandMotorCallback, this);
@@ -164,6 +164,8 @@ void GazeboControllerInterface::CreatePubsAndSubs() {
   gzdbg << __FUNCTION__ << "() called." << std::endl;
 }
 
+/// @brief 收到 command/motor_speed 之后转存于 input_reference_ 中
+/// @param actuators_msg command/motor_speed 话题
 void GazeboControllerInterface::CommandMotorCallback(
     GzActuatorsMsgPtr& actuators_msg) {
   if (kPrintOnMsgCallback) {
@@ -176,8 +178,7 @@ void GazeboControllerInterface::CommandMotorCallback(
   }
 
   // We have received a motor command reference (it may not be the first, but
-  // this
-  // does not matter)
+  // this does not matter)
   received_first_reference_ = true;
 }
 

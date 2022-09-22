@@ -83,13 +83,16 @@ class GazeboControllerInterface : public ModelPlugin {
   ///           has loaded and listening to ConnectGazeboToRosTopic and ConnectRosToGazeboTopic messages).
   void CreatePubsAndSubs();
 
+  /// \brief    Save angular_velocities.
   /// \details  This gets populated (including resizing if needed) when CommandMotorCallback() is
   ///           called.
   Eigen::VectorXd input_reference_;
 
   //===== VARIABLES READ FROM SDF FILE =====//
   std::string namespace_;
+  // 默认是gazebo/command/motor_speed
   std::string motor_velocity_reference_pub_topic_;
+  // 默认是command/motor_speed
   std::string command_motor_speed_sub_topic_;
 
 

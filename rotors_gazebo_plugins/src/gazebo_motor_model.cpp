@@ -32,18 +32,19 @@ GazeboMotorModel::~GazeboMotorModel() {
 void GazeboMotorModel::InitializeParams() {}
 
 void GazeboMotorModel::Publish() {
-  if (publish_speed_) {
-    turning_velocity_msg_.set_data(joint_->GetVelocity(0));
-    motor_velocity_pub_->Publish(turning_velocity_msg_);
-  }
-  if (publish_position_) {
-    position_msg_.set_data(joint_->Position(0));
-    motor_position_pub_->Publish(position_msg_);
-  }
-  if (publish_force_) {
-    force_msg_.set_data(joint_->GetForce(0));
-    motor_force_pub_->Publish(force_msg_);
-  }
+  // if (publish_speed_) {
+  //   // 这里发布motor_speed/${motor_number}
+  //   turning_velocity_msg_.set_data(joint_->GetVelocity(0));
+  //   motor_velocity_pub_->Publish(turning_velocity_msg_);
+  // }
+  // if (publish_position_) {
+  //   position_msg_.set_data(joint_->Position(0));
+  //   motor_position_pub_->Publish(position_msg_);
+  // }
+  // if (publish_force_) {
+  //   force_msg_.set_data(joint_->GetForce(0));
+  //   motor_force_pub_->Publish(force_msg_);
+  // }
 }
 
 void GazeboMotorModel::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
@@ -93,6 +94,7 @@ void GazeboMotorModel::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
   else
     gzerr << "[gazebo_motor_model] Please specify a motorNumber.\n";
 
+  // 螺旋桨旋转方向turning_direction_
   if (_sdf->HasElement("turningDirection")) {
     std::string turning_direction =
         _sdf->GetElement("turningDirection")->Get<std::string>();
@@ -243,18 +245,20 @@ void GazeboMotorModel::CreatePubsAndSubs() {
   // ============================================ //
   //  ACTUAL MOTOR SPEED MSG SETUP (GAZEBO->ROS)  //
   // ============================================ //
-  if (publish_speed_) {
-    motor_velocity_pub_ = node_handle_->Advertise<gz_std_msgs::Float32>(
-        "~/" + namespace_ + "/" + motor_speed_pub_topic_, 1);
 
-    connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
-        "~/" + namespace_ + "/" + motor_speed_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_ros_topic(
-        namespace_ + "/" + motor_speed_pub_topic_);
-    connect_gazebo_to_ros_topic_msg.set_msgtype(
-        gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
-    gz_connect_gazebo_to_ros_topic_pub->Publish(
-        connect_gazebo_to_ros_topic_msg, true);
+  // 这个注释掉motor_speed/${motor_number}话题就不存在了，没人订阅暂不影响仿真结果
+  if (publish_speed_) {
+    // motor_velocity_pub_ = node_handle_->Advertise<gz_std_msgs::Float32>(
+    //     "~/" + namespace_ + "/" + motor_speed_pub_topic_, 1);
+
+    // connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
+    //     "~/" + namespace_ + "/" + motor_speed_pub_topic_);
+    // connect_gazebo_to_ros_topic_msg.set_ros_topic(
+    //     namespace_ + "/" + motor_speed_pub_topic_);
+    // connect_gazebo_to_ros_topic_msg.set_msgtype(
+    //     gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
+    // gz_connect_gazebo_to_ros_topic_pub->Publish(
+    //     connect_gazebo_to_ros_topic_msg, true);
   }
 
   // =============================================== //
@@ -297,10 +301,12 @@ void GazeboMotorModel::CreatePubsAndSubs() {
   // = CONTROL COMMAND MSG SETUP (ROS->GAZEBO) = //
   // ============================================ //
 
+  // command_sub_topic_从xacro读入的是gazebo/command/motor_speed
   command_sub_ = node_handle_->Subscribe(
       "~/" + namespace_ + "/" + command_sub_topic_,
       &GazeboMotorModel::ControlCommandCallback, this);
 
+  // 这里解决gazebo/command/motor_speed话题订阅的问题，但发布在gazebo_control_interface插件
   connect_ros_to_gazebo_topic_msg.set_ros_topic(
       namespace_ + "/" + command_sub_topic_);
   connect_ros_to_gazebo_topic_msg.set_gazebo_topic(
@@ -329,6 +335,8 @@ void GazeboMotorModel::CreatePubsAndSubs() {
       connect_ros_to_gazebo_topic_msg, true);
 }
 
+/// @brief 收到command并更新参考控制输入ref_motor_input
+/// @param command_motor_input_msg 控制器给出的控制命令
 void GazeboMotorModel::ControlCommandCallback(
     GzCommandMotorInputMsgPtr& command_motor_input_msg) {
   if (kPrintOnMsgCallback) {
@@ -341,6 +349,7 @@ void GazeboMotorModel::ControlCommandCallback(
           << command_motor_input_msg->motor_speed_size();
   }
 
+  // ref_motor_input实际是输入的command_motor_input
   if (motor_type_ == MotorType::kVelocity) {
     ref_motor_input_ = std::min(
         static_cast<double>(
@@ -414,6 +423,10 @@ void GazeboMotorModel::UpdateForcesAndMoments() {
     }
     default:  // MotorType::kVelocity
     {
+      // GetVelocity、SetVelocity等函数的输入index一般为0，如回转关节只有一个轴。
+      // The axis parameter is an index, and it may be 0 or 1. 
+      // Zero means the first axis on the joint, and one means 
+      // the second if applicable.
       motor_rot_vel_ = joint_->GetVelocity(0);
       if (motor_rot_vel_ / (2 * M_PI) > 1 / (2 * sampling_time_)) {
         gzerr << "Aliasing on motor [" << motor_number_
@@ -426,11 +439,12 @@ void GazeboMotorModel::UpdateForcesAndMoments() {
       int real_motor_velocity_sign =
           (real_motor_velocity > 0) - (real_motor_velocity < 0);
       // Assuming symmetric propellers (or rotors) for the thrust calculation.
-      double thrust = turning_direction_ * real_motor_velocity_sign *
-                      real_motor_velocity * real_motor_velocity *
+      // （前面这俩乘完必然是1，后面拉力T=c_T*omega^2）
+      double thrust = turning_direction_ * real_motor_velocity_sign * 
+                      real_motor_velocity * real_motor_velocity * 
                       motor_constant_;
 
-      // Apply a force to the link.
+      // Apply a force to the link. 是相对自身坐标的力
       link_->AddRelativeForce(ignition::math::Vector3d (0, 0, thrust));
 
       // Forces from Philppe Martin's and Erwan Salaün's
@@ -447,7 +461,7 @@ void GazeboMotorModel::UpdateForcesAndMoments() {
                                rotor_drag_coefficient_ *
                                body_velocity_perpendicular;
 
-      // Apply air_drag to link.
+      // Apply air_drag to link. 是相对世界坐标的力
       link_->AddForce(air_drag);
       // Moments get the parent link, such that the resulting torques can be
       // applied.
