@@ -40,7 +40,7 @@
       <param name="max_roll" value="1.0" />
       <param name="max_pitch" value="1.0" />
       <param name="max_yaw_rate" value="1.0" />
-      <!-- pitch方向和常规定义不一样 -->
+      <!-- pitch方向和常规定义不一样，改完后摇杆右上为1，左下为-1 -->
       <param name="axis_direction_pitch" value="1" />
     </node>
     <!-- publish robot state for rviz -->

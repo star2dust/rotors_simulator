@@ -281,6 +281,10 @@ void GazeboFwDynamicsPlugin::UpdateForcesAndMoments() {
   link_->AddRelativeTorque(moments);
 }
 
+/// @brief Normalize input [-1,1] to angle [min,max]
+/// @param surface Angle limitation settings
+/// @param input Channel input [-1,1]
+/// @return Normalized angle
 double GazeboFwDynamicsPlugin::NormalizedInputToAngle(
     const ControlSurface& surface, double input) {
   return (surface.deflection_max + surface.deflection_min) * 0.5 +
@@ -380,13 +384,18 @@ void GazeboFwDynamicsPlugin::RollPitchYawrateThrustCallback(
   if (kPrintOnMsgCallback) {
     gzdbg << __FUNCTION__ << "() called." << std::endl;
   }
-
+  // roll>0，左副翼往下打（max），右副翼往上打（min）
+  // roll<0，左副翼往上打（min），右副翼往下打（max）
   delta_aileron_left_ = NormalizedInputToAngle(vehicle_params_.aileron_left,
       roll_pitch_yawrate_thrust_msg->roll());
   delta_aileron_right_ = -NormalizedInputToAngle(vehicle_params_.aileron_right,
       roll_pitch_yawrate_thrust_msg->roll());
+  // pitch>0，升降舵往下打（max）
+  // pitch<0，升降舵往上打（min）
   delta_elevator_ = NormalizedInputToAngle(vehicle_params_.elevator,
       roll_pitch_yawrate_thrust_msg->pitch());
+  // yaw_rate>0，方向舵向右打（max）
+  // yaw_rate<0，方向舵向左打（min）
   delta_rudder_ = NormalizedInputToAngle(vehicle_params_.rudder,
       roll_pitch_yawrate_thrust_msg->yaw_rate());
 

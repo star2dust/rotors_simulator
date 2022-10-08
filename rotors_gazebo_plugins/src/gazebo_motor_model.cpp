@@ -32,19 +32,19 @@ GazeboMotorModel::~GazeboMotorModel() {
 void GazeboMotorModel::InitializeParams() {}
 
 void GazeboMotorModel::Publish() {
-  // if (publish_speed_) {
-  //   // 这里发布motor_speed/${motor_number}
-  //   turning_velocity_msg_.set_data(joint_->GetVelocity(0));
-  //   motor_velocity_pub_->Publish(turning_velocity_msg_);
-  // }
-  // if (publish_position_) {
-  //   position_msg_.set_data(joint_->Position(0));
-  //   motor_position_pub_->Publish(position_msg_);
-  // }
-  // if (publish_force_) {
-  //   force_msg_.set_data(joint_->GetForce(0));
-  //   motor_force_pub_->Publish(force_msg_);
-  // }
+  if (publish_speed_) {
+    // 这里发布motor_speed/${motor_number}
+    turning_velocity_msg_.set_data(joint_->GetVelocity(0));
+    motor_velocity_pub_->Publish(turning_velocity_msg_);
+  }
+  if (publish_position_) {
+    position_msg_.set_data(joint_->Position(0));
+    motor_position_pub_->Publish(position_msg_);
+  }
+  if (publish_force_) {
+    force_msg_.set_data(joint_->GetForce(0));
+    motor_force_pub_->Publish(force_msg_);
+  }
 }
 
 void GazeboMotorModel::Load(physics::ModelPtr _model, sdf::ElementPtr _sdf) {
@@ -248,17 +248,17 @@ void GazeboMotorModel::CreatePubsAndSubs() {
 
   // 这个注释掉motor_speed/${motor_number}话题就不存在了，没人订阅暂不影响仿真结果
   if (publish_speed_) {
-    // motor_velocity_pub_ = node_handle_->Advertise<gz_std_msgs::Float32>(
-    //     "~/" + namespace_ + "/" + motor_speed_pub_topic_, 1);
+    motor_velocity_pub_ = node_handle_->Advertise<gz_std_msgs::Float32>(
+        "~/" + namespace_ + "/" + motor_speed_pub_topic_, 1);
 
-    // connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
-    //     "~/" + namespace_ + "/" + motor_speed_pub_topic_);
-    // connect_gazebo_to_ros_topic_msg.set_ros_topic(
-    //     namespace_ + "/" + motor_speed_pub_topic_);
-    // connect_gazebo_to_ros_topic_msg.set_msgtype(
-    //     gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
-    // gz_connect_gazebo_to_ros_topic_pub->Publish(
-    //     connect_gazebo_to_ros_topic_msg, true);
+    connect_gazebo_to_ros_topic_msg.set_gazebo_topic(
+        "~/" + namespace_ + "/" + motor_speed_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_ros_topic(
+        namespace_ + "/" + motor_speed_pub_topic_);
+    connect_gazebo_to_ros_topic_msg.set_msgtype(
+        gz_std_msgs::ConnectGazeboToRosTopic::FLOAT_32);
+    gz_connect_gazebo_to_ros_topic_pub->Publish(
+        connect_gazebo_to_ros_topic_msg, true);
   }
 
   // =============================================== //
