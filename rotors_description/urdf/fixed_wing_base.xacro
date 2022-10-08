@@ -75,7 +75,7 @@
       <material>Gazebo/${color}</material>
     </gazebo>
 
-    <!-- Attach fw_dynamics to the base_link -->
+    <!-- Attach fw_dynamics to the base_link（机体动力学模型） -->
     <gazebo>
       <plugin filename="librotors_gazebo_fw_dynamics_plugin.so" name="fw_dynamics_plugin">
         <robotNamespace>${robot_namespace}</robotNamespace>
@@ -87,7 +87,7 @@
     </gazebo>
   </xacro:macro>
 
-  <!-- Control surface joint and link -->
+  <!-- Control surface joint and link（控制面，包括各种舵） -->
   <xacro:macro name="control_surface"
     params="robot_namespace surface_name parent mass_surface min_angle
       max_angle color use_mesh_file mesh_file surface_length surface_width
@@ -135,7 +135,7 @@
     </gazebo>
   </xacro:macro>
 
-  <!-- Propeller joint and link -->
+  <!-- Propeller joint and link（水平螺旋桨） -->
   <xacro:macro name="propeller"
     params="robot_namespace suffix parent mass_propeller propeller_radius color
       use_mesh_file mesh_file *origin *inertia">
