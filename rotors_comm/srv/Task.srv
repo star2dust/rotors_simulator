@@ -1,0 +1,12 @@
+# 执行任务服务示例
+
+# 分割线之前是request，服务请求者的口令
+bool ready
+string name
+---
+# 分割线之后是response，服务回复者的情报
+Header header
+# 获取的路径
+geometry_msgs/Point[] path
+# 执行任务的位置
+geometry_msgs/Point task_pos
