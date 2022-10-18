@@ -21,6 +21,7 @@ add_message_files(
   WindSpeed.msg
   PicsData.msg
   PicsProcessResult.msg
+  FormationCenter.msg
 )
 
 generate_messages(
