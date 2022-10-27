@@ -13,7 +13,9 @@ add_service_files(
   FILES
   Octomap.srv
   RecordRosbag.srv
-  Task.srv
+  PathTarget.srv
+  AdjacencyReset.srv
+  FormationTask.srv
 )
 
 add_message_files(
@@ -22,6 +24,7 @@ add_message_files(
   PicsData.msg
   PicsProcessResult.msg
   FormationCenter.msg
+  FormationCenterStamped.msg
 )
 
 generate_messages(

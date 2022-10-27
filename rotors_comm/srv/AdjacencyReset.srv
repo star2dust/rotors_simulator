@@ -1,0 +1,8 @@
+# 分割线之前是request，服务请求者的口令
+string name # id+type
+int32 id # 可以是别人的id
+string type # 可以是地面站
+float64[] adjacency # 新的邻接表
+---
+# 分割线之后是response，服务回复者的情报
+bool complete # 改变adjacency完毕

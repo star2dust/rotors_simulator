@@ -1,3 +1,4 @@
+Header header
 string name # id+type
 int32 id # 可以是别人的id
 string type
