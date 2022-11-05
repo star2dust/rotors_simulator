@@ -15,7 +15,7 @@ add_service_files(
   RecordRosbag.srv
   PathTarget.srv
   AdjacencyReset.srv
-  FormationTask.srv
+  CommandTask.srv
 )
 
 add_message_files(
@@ -23,8 +23,8 @@ add_message_files(
   WindSpeed.msg
   PicsData.msg
   PicsProcessResult.msg
-  FormationCenter.msg
-  FormationCenterStamped.msg
+  Neighbor.msg
+  NeighborStamped.msg
 )
 
 generate_messages(
@@ -32,6 +32,7 @@ generate_messages(
   geometry_msgs 
   octomap_msgs 
   std_msgs
+  rotors_comm # 依赖本包加在这
 )
 
 catkin_package(
