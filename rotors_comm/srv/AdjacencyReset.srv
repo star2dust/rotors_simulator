@@ -1,5 +1,6 @@
 # 分割线之前是request，服务请求者的口令
-string name # id+type请求者名称
+string name # id+type请求者名
+int32 id # 可以是别人的id
 int32 mode # join = 0, leave = 1, update = 2
 float64[] adjacency # 更新邻接值
 ---
